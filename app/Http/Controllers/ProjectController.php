@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -13,7 +16,34 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $query = Project::query();
+
+        $sortField = request('sort', 'id');
+        $sortOrder = request('order', 'asc');
+
+        if (request()->has('name')) {
+            // $query->where('name', 'like', '%' . request('name') . '%');
+            // POSTGRES
+            $query->whereRaw('name ILIKE ?', ['%' . request('name') . '%']);
+        }
+
+        if (request()->has('status')) {
+            $query->where('status', request('status'));
+        }
+
+        $projects = $query
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)
+            ->onEachSide(1)
+            ->appends(request()->query());
+
+        return Inertia::render(
+            'Project/Index',
+            [
+                'projects' => ProjectResource::collection($projects),
+                'queryParams' => request()->query() ?: null
+            ]
+        );
     }
 
     /**
@@ -37,7 +67,32 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        $query = $project->tasks();
+
+        $sortField = request('sort', 'id');
+        $sortOrder = request('order', 'asc');
+
+        if (request()->has('name')) {
+            // $query->where('name', 'like', '%' . request('name') . '%');
+            // POSTGRES
+            $query->whereRaw('name ILIKE ?', ['%' . request('name') . '%']);
+        }
+
+        if (request()->has('status')) {
+            $query->where('status', request('status'));
+        }
+
+        $tasks = $query
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)
+            ->onEachSide(1)
+            ->appends(request()->query());
+
+        return Inertia::render('Project/Show', [
+            'project' => new ProjectResource($project),
+            'tasks' => TaskResource::collection($tasks),
+            'queryParams' => request()->query ?: null
+        ]);
     }
 
     /**

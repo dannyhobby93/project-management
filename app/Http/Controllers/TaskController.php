@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
@@ -13,7 +15,34 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $query = Task::query();
+
+        $sortField = request('sort', 'id');
+        $sortOrder = request('order', 'asc');
+
+        if (request()->has('name')) {
+            // $query->where('name', 'like', '%' . request('name') . '%');
+            // POSTGRES
+            $query->whereRaw('name ILIKE ?', ['%' . request('name') . '%']);
+        }
+
+        if (request()->has('status')) {
+            $query->where('status', request('status'));
+        }
+
+        $projects = $query
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)
+            ->onEachSide(1)
+            ->appends(request()->query());
+
+        return Inertia::render(
+            'Task/Index',
+            [
+                'tasks' => TaskResource::collection($projects),
+                'queryParams' => request()->query() ?: null
+            ]
+        );
     }
 
     /**

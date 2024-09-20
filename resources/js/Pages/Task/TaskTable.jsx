@@ -134,7 +134,7 @@ export default function TaskTable({
                   <option value="completed">Completed</option>
                 </SelectInput>
               </th>
-              <th className="px-3 py-3" colspan="4"></th>
+              <th className="px-3 py-3" colSpan="4"></th>
             </tr>
           </thead>
           <tbody>

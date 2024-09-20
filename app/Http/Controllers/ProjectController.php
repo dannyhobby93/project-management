@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Project;
+use Illuminate\Support\Str;
+use App\Http\Resources\TaskResource;
+use App\Http\Resources\ProjectResource;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-use App\Http\Resources\ProjectResource;
-use App\Http\Resources\TaskResource;
-use App\Models\Project;
-use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -19,7 +20,7 @@ class ProjectController extends Controller
         $query = Project::query();
 
         $sortField = request('sort', 'id');
-        $sortOrder = request('order', 'asc');
+        $sortOrder = request('order', 'desc');
 
         if (request()->has('name')) {
             // $query->where('name', 'like', '%' . request('name') . '%');
@@ -51,7 +52,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Project/Create');
     }
 
     /**
@@ -59,7 +60,22 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['created_by'] = $request->user()->id;
+        $data['updated_by'] = $request->user()->id;
+
+        $image = $request->file('image');
+
+        if ($image) {
+            $data['image_path'] = $image->store('images/uploads/projects', 'public');
+        }
+
+        Project::create($data);
+
+        return redirect()->route('project.index')->with(
+            'success',
+            'Project was created.'
+        );
     }
 
     /**

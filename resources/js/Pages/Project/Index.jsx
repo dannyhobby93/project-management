@@ -46,6 +46,18 @@ export default function Index({ auth, projects, queryParams = null, success }) {
     });
   };
 
+  const deleteProject = (project) => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this project? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+    // route("project.destroy", project.id);
+    router.delete(route("project.destroy", project.id));
+  };
+
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -194,19 +206,19 @@ export default function Index({ auth, projects, queryParams = null, success }) {
                         <td className="px-3 py-2 text-nowrap">
                           {project.created_by.name}
                         </td>
-                        <td className="px-3 py-2 text-right">
+                        <td className="px-3 py-2 text-right text-nowrap">
                           <Link
                             href={route("project.edit", project.id)}
                             className="text-blue-600 font-medium dark:text-blue-500 hover:underline mx-1"
                           >
                             Edit
                           </Link>
-                          <Link
-                            href={route("project.destroy", project.id)}
+                          <button
+                            onClick={(e) => deleteProject(project)}
                             className="text-red-600 font-medium dark:text-red-500 hover:underline mx-1"
                           >
                             Delete
-                          </Link>
+                          </button>
                         </td>
                       </tr>
                     ))}

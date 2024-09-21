@@ -27,7 +27,7 @@ export default function Show({ auth, project, tasks, queryParams = null }) {
             <div>
               <img
                 src={project.image}
-                alt=""
+                alt="Project image"
                 className="w-full h-64 object-cover"
               />
             </div>

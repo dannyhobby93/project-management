@@ -148,7 +148,7 @@ export default function TaskTable({
                   <img src={task.image} className="w-10 h-10" />
                 </td>
                 {projectColumn && (
-                  <td className="px-3 py-2">
+                  <td className="px-3 py-2 hover:underline text-white">
                     <Link href={route("project.show", task.project.id)}>
                       {task.project.name}
                     </Link>

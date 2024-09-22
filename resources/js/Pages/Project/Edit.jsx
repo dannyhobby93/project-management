@@ -32,7 +32,7 @@ export default function Edit({ auth, project }) {
         </h2>
       }
     >
-      <Head title="Create new Project" />
+      <Head title="Edit Project" />
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

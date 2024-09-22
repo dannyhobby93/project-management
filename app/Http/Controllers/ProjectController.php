@@ -74,8 +74,11 @@ class ProjectController extends Controller
         Project::create($data);
 
         return redirect()->route('project.index')->with(
-            'success',
-            'Project was created.'
+            'message',
+            [
+                'text' => 'Project was created.',
+                'type' => 'success'
+            ]
         );
     }
 
@@ -142,8 +145,11 @@ class ProjectController extends Controller
         $project->update($data);
 
         return redirect()->route('project.index')->with(
-            'success',
-            'Project was updated.'
+            'message',
+            [
+                'text' => 'Project ' . $project->name . ' was updated.',
+                'type' => 'success'
+            ]
         );
     }
 
@@ -161,8 +167,11 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->route('project.index')->with(
-            'success',
-            'Project ' . $name . ' was deleted.'
+            'message',
+            [
+                'text' => 'Project ' . $name . ' was deleted.',
+                'type' => 'success'
+            ]
         );
     }
 }

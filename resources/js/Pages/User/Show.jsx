@@ -3,10 +3,8 @@ import { USER_STATUS_CLASS_MAP, USER_STATUS_TEXT_MAP } from "@/utils/constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import React from "react";
-import TaskTable from "../Task/TaskTable";
 
-export default function Show({ auth, user, tasks, queryParams = null }) {
-  console.log(user);
+export default function Show({ auth, user }) {
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -75,16 +73,6 @@ export default function Show({ auth, user, tasks, queryParams = null }) {
                 <label className="font-bold text-lg">Description</label>
                 <p className="mt-1">{user.description}</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="pb-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div className="p-6 text-gray-900 dark:text-gray-100">
-              <TaskTable tasks={tasks} queryParams={queryParams} />
             </div>
           </div>
         </div>

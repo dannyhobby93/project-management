@@ -9,7 +9,6 @@ import React from "react";
 import TaskTable from "../Task/TaskTable";
 
 export default function Show({ auth, project, tasks, queryParams = null }) {
-  console.log(project);
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -74,6 +73,7 @@ export default function Show({ auth, project, tasks, queryParams = null }) {
                   </div>
                 </div>
               </div>
+              <hr className="mt-4" />
               <div className="mt-4">
                 <label className="font-bold text-lg">Description</label>
                 <p className="mt-1">{project.description}</p>

@@ -46,6 +46,18 @@ export default function TaskTable({
       preserveState: true,
     });
   };
+
+  const deleteTask = (task) => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this task? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+    router.delete(route("task.destroy", task.id));
+  };
+
   return (
     <>
       <div className="overflow-auto">
@@ -154,7 +166,9 @@ export default function TaskTable({
                     </Link>
                   </td>
                 )}
-                <td className="px-3 py-2">{task.name}</td>
+                <td className="px-3 py-2 text-white font-medium hover:underline">
+                  <Link href={route("task.show", task.id)}>{task.name}</Link>
+                </td>
                 <td className="px-3 py-2">
                   <span
                     className={`px-2 py-1 rounded-md text-white ${
@@ -169,19 +183,19 @@ export default function TaskTable({
                 <td className="px-3 py-2 text-nowrap">
                   {task.created_by.name}
                 </td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-nowrap">
                   <Link
                     href={route("task.edit", task.id)}
                     className="text-blue-600 font-medium dark:text-blue-500 hover:underline mx-1"
                   >
                     Edit
                   </Link>
-                  <Link
-                    href={route("task.destroy", task.id)}
+                  <button
+                    onClick={(e) => deleteTask(task)}
                     className="text-red-600 font-medium dark:text-red-500 hover:underline mx-1"
                   >
                     Delete
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}

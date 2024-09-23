@@ -176,4 +176,36 @@ class TaskController extends Controller
             ]
         );
     }
+
+    public function myTasks()
+    {
+        $query = Task::query();
+
+        $sortField = request('sort', 'id');
+        $sortOrder = request('order', 'desc');
+
+        if (request()->has('name')) {
+            // $query->where('name', 'like', '%' . request('name') . '%');
+            // POSTGRES
+            $query->whereRaw('name ILIKE ?', ['%' . request('name') . '%']);
+        }
+
+        if (request()->has('status')) {
+            $query->where('status', request('status'));
+        }
+
+        $tasks = $query->where('assigned_user_id', auth()->user()->id)
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)
+            ->onEachSide(1)
+            ->appends(request()->query());
+
+        return Inertia::render(
+            'Task/Index',
+            [
+                'tasks' => TaskResource::collection($tasks),
+                'queryParams' => request()->query() ?: null
+            ]
+        );
+    }
 }
